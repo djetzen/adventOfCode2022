@@ -1,4 +1,4 @@
-package de.djetzen.advent.one
+package de.djetzen.advent
 
 import java.nio.file.Files
 import java.nio.file.Paths

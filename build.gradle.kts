@@ -29,15 +29,11 @@ tasks.withType<KotlinCompile> {
 }
 
 sonar.properties {
-    property("sonar.projectKey","adventOfCode2022")
-    property("sonar.organization","djetzen")
-    property("sonar.host.url","https://sonarcloud.io")
+    property("sonar.projectKey", "adventOfCode2022")
+    property("sonar.organization", "djetzen")
+    property("sonar.host.url", "https://sonarcloud.io")
     property("sonar.sources", "src/main/")
     property("sonar.tests", "src/test/")
-}
-
-application {
-    mainClass.set("MainKt")
 }
 
 tasks.jacocoTestReport {
