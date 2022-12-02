@@ -6,9 +6,11 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened]
 
 jobs:
   yamllint:
@@ -24,6 +26,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Set up JDK 1.17
         uses: actions/setup-java@v3
         with:
@@ -32,7 +46,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew build jacocoTestReport
+        run: ./gradlew build sonar jacocoTestReport --info
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - uses: codecov/codecov-action@v3
         with:
           files: build/reports/jacoco/test/jacocoTestReport.xml  # optional
