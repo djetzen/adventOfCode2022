@@ -4,11 +4,21 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 class RockPaperScissors {
-    fun parse(fileName: String): List<StrategyElement> {
+    data class StrategyElement(val input: Play, val response: Play)
+    data class RealStrategy(val input: Play, val response: Char)
+
+    enum class Play {
+        ROCK,
+        PAPER,
+        SCISSORS
+    }
+
+    fun parseToStrategyElement(fileName: String): List<StrategyElement> {
         val allLines = Files.readAllLines(Paths.get(fileName))
-        var strategyElements = ArrayList<StrategyElement>()
+        val strategyElements = ArrayList<StrategyElement>()
         for (line in allLines) {
-            val strategyElement = StrategyElement(convertInput(line.filterNot { it.isWhitespace() }[0]),
+            val strategyElement = StrategyElement(
+                convertInput(line.filterNot { it.isWhitespace() }[0]),
                 convertResponse(line.filterNot { it.isWhitespace() }[1])
             )
             strategyElements += strategyElement
@@ -16,7 +26,21 @@ class RockPaperScissors {
         return strategyElements
     }
 
-    fun getScore(strategyElement: StrategyElement): Int {
+    fun parseToRealStrategy(fileName: String): List<RealStrategy> {
+        val allLines = Files.readAllLines(Paths.get(fileName))
+        val strategyElements = ArrayList<RealStrategy>()
+        for (line in allLines) {
+            val strategyElement = RealStrategy(
+                convertInput(line.filterNot { it.isWhitespace() }[0]),
+                line.filterNot { it.isWhitespace() }[1]
+            )
+            strategyElements += strategyElement
+        }
+        return strategyElements
+    }
+
+
+    fun getScoreRegardingAssumption(strategyElement: StrategyElement): Int {
         var score = getValuePlayed(strategyElement.response)
 
         if (isDraw(strategyElement)) {
@@ -29,34 +53,99 @@ class RockPaperScissors {
         return score
     }
 
+    fun getScoreRegardingRealRules(play: Play, char: Char): Int {
+        var score = 0
+        score += getScoreForRealRules(char)
+        when (char) {
+            'X' -> {
+                score += getLosingValue(play)
+            }
+
+            'Y' -> {
+                score += getValuePlayed(play)
+            }
+
+            else -> {
+                score += getWinningValue(play)
+            }
+        }
+        return score
+    }
+
     private fun isDraw(strategyElement: StrategyElement): Boolean {
         return strategyElement.input == strategyElement.response
     }
 
-    data class StrategyElement(val input: Play, val response: Play)
+    private fun getValuePlayed(play: Play): Int {
+        return when (play) {
+            Play.ROCK -> {
+                1
+            }
 
-    enum class Play {
-        ROCK,
-        PAPER,
-        SCISSORS
+            Play.PAPER -> {
+                2
+            }
+
+            else -> {
+                3
+            }
+        }
     }
 
-    private fun getValuePlayed(play: Play): Int {
-        if (play == Play.ROCK) {
-            return 1
-        } else if (play == Play.PAPER) {
-            return 2
-        } else {
-            return 3
+    private fun getLosingValue(play: Play): Int {
+        return when (play) {
+            Play.ROCK -> {
+                3
+            }
+
+            Play.PAPER -> {
+                1
+            }
+
+            else -> {
+                2
+            }
+        }
+    }
+
+    private fun getWinningValue(play: Play): Int {
+        return when (play) {
+            Play.ROCK -> {
+                2
+            }
+
+            Play.PAPER -> {
+                3
+            }
+
+            else -> {
+                1
+            }
         }
     }
 
     private fun isWin(strategyElement: StrategyElement): Boolean {
-        if (strategyElement.input == Play.ROCK && strategyElement.response == Play.PAPER) {
-            return true
+        return if (strategyElement.input == Play.ROCK && strategyElement.response == Play.PAPER) {
+            true
         } else if (strategyElement.input == Play.PAPER && strategyElement.response == Play.SCISSORS) {
-            return true
-        } else return strategyElement.input == Play.SCISSORS && strategyElement.response == Play.ROCK
+            true
+        } else strategyElement.input == Play.SCISSORS && strategyElement.response == Play.ROCK
+    }
+
+    private fun getScoreForRealRules(input: Char): Int {
+        return when (input) {
+            'X' -> {
+                0
+            }
+
+            'Y' -> {
+                3
+            }
+
+            else -> {
+                6
+            }
+        }
     }
 
     private fun convertInput(input: Char): Play {
@@ -90,5 +179,4 @@ class RockPaperScissors {
             }
         }
     }
-
 }

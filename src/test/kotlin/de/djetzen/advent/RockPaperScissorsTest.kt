@@ -7,9 +7,9 @@ import kotlin.test.assertEquals
 class RockPaperScissorsTest {
 
     @Test
-    fun inputIsParsedAppropriate() {
+    fun inputIsParseForAssumedRoles() {
         val rps = RockPaperScissors()
-        val parsedStrategies = rps.parse("src/test/resources/testinputs/testinput2_1.txt")
+        val parsedStrategies = rps.parseToStrategyElement("src/test/resources/testInputs/testinput2_1.txt")
 
         val expectedStrategies = listOf(
             RockPaperScissors.StrategyElement(RockPaperScissors.Play.ROCK, RockPaperScissors.Play.ROCK),
@@ -25,7 +25,12 @@ class RockPaperScissorsTest {
         val rps = RockPaperScissors()
 
         val score =
-            rps.getScore(RockPaperScissors.StrategyElement(RockPaperScissors.Play.ROCK, RockPaperScissors.Play.ROCK))
+            rps.getScoreRegardingAssumption(
+                RockPaperScissors.StrategyElement(
+                    RockPaperScissors.Play.ROCK,
+                    RockPaperScissors.Play.ROCK
+                )
+            )
 
         assertEquals(4, score)
     }
@@ -35,7 +40,12 @@ class RockPaperScissorsTest {
         val rps = RockPaperScissors()
 
         val score =
-            rps.getScore(RockPaperScissors.StrategyElement(RockPaperScissors.Play.PAPER, RockPaperScissors.Play.PAPER))
+            rps.getScoreRegardingAssumption(
+                RockPaperScissors.StrategyElement(
+                    RockPaperScissors.Play.PAPER,
+                    RockPaperScissors.Play.PAPER
+                )
+            )
 
         assertEquals(5, score)
     }
@@ -45,7 +55,7 @@ class RockPaperScissorsTest {
         val rps = RockPaperScissors()
 
         val score =
-            rps.getScore(
+            rps.getScoreRegardingAssumption(
                 RockPaperScissors.StrategyElement(
                     RockPaperScissors.Play.SCISSORS,
                     RockPaperScissors.Play.SCISSORS
@@ -60,7 +70,12 @@ class RockPaperScissorsTest {
         val rps = RockPaperScissors()
 
         val score =
-            rps.getScore(RockPaperScissors.StrategyElement(RockPaperScissors.Play.PAPER, RockPaperScissors.Play.ROCK))
+            rps.getScoreRegardingAssumption(
+                RockPaperScissors.StrategyElement(
+                    RockPaperScissors.Play.PAPER,
+                    RockPaperScissors.Play.ROCK
+                )
+            )
 
         assertEquals(1, score)
     }
@@ -70,7 +85,12 @@ class RockPaperScissorsTest {
         val rps = RockPaperScissors()
 
         val score =
-            rps.getScore(RockPaperScissors.StrategyElement(RockPaperScissors.Play.ROCK, RockPaperScissors.Play.ROCK))
+            rps.getScoreRegardingAssumption(
+                RockPaperScissors.StrategyElement(
+                    RockPaperScissors.Play.ROCK,
+                    RockPaperScissors.Play.ROCK
+                )
+            )
 
         assertEquals(4, score)
     }
@@ -81,7 +101,7 @@ class RockPaperScissorsTest {
         val rps = RockPaperScissors()
 
         val score =
-            rps.getScore(
+            rps.getScoreRegardingAssumption(
                 RockPaperScissors.StrategyElement(
                     RockPaperScissors.Play.PAPER,
                     RockPaperScissors.Play.SCISSORS
@@ -96,7 +116,7 @@ class RockPaperScissorsTest {
         val rps = RockPaperScissors()
 
         val score =
-            rps.getScore(
+            rps.getScoreRegardingAssumption(
                 RockPaperScissors.StrategyElement(
                     RockPaperScissors.Play.ROCK,
                     RockPaperScissors.Play.PAPER
@@ -111,7 +131,7 @@ class RockPaperScissorsTest {
         val rps = RockPaperScissors()
 
         val score =
-            rps.getScore(
+            rps.getScoreRegardingAssumption(
                 RockPaperScissors.StrategyElement(
                     RockPaperScissors.Play.SCISSORS,
                     RockPaperScissors.Play.ROCK
@@ -122,16 +142,68 @@ class RockPaperScissorsTest {
     }
 
     @Test
-    fun getTotalScoreOfStrategyGuide() {
+    fun getTotalScoreOfStrategyGuideWithAssumption() {
         val rps = RockPaperScissors()
-        var parsedStrategies = rps.parse("src/test/resources/realinputs/realinput2_1.txt")
+        val parsedStrategies = rps.parseToStrategyElement("src/test/resources/realInputs/realinput2_1.txt")
 
         var totalScore = 0
         for (strategy in parsedStrategies) {
-            totalScore += rps.getScore(strategy)
+            totalScore += rps.getScoreRegardingAssumption(strategy)
         }
         assertEquals(11767, totalScore)
     }
 
+    @Test
+    fun withRealRulesAnXIsLosing() {
+        val rps = RockPaperScissors()
+
+        val score = rps.getScoreRegardingRealRules(RockPaperScissors.Play.ROCK, 'X')
+
+        assertEquals(3, score)
+    }
+
+    @Test
+    fun withRealRulesAnYIsADraw() {
+        val rps = RockPaperScissors()
+
+        val score = rps.getScoreRegardingRealRules(RockPaperScissors.Play.ROCK, 'Y')
+
+        assertEquals(4, score)
+    }
+
+    @Test
+    fun withRealRulesZIsAWin() {
+        val rps = RockPaperScissors()
+
+        val score = rps.getScoreRegardingRealRules(RockPaperScissors.Play.ROCK, 'Z')
+
+        assertEquals(8, score)
+    }
+
+    @Test
+    fun inputIsParsedForRealRules() {
+        val rps = RockPaperScissors()
+        val parsedStrategies = rps.parseToRealStrategy("src/test/resources/testInputs/testinput2_1.txt")
+
+        val expectedStrategies = listOf(
+            RockPaperScissors.RealStrategy(RockPaperScissors.Play.ROCK, 'X'),
+            RockPaperScissors.RealStrategy(RockPaperScissors.Play.PAPER, 'Y'),
+            RockPaperScissors.RealStrategy(RockPaperScissors.Play.SCISSORS, 'Z')
+        )
+
+        assertEquals(expectedStrategies, parsedStrategies)
+    }
+
+    @Test
+    fun getTotalScoreOfStrategyGuideWithRealRules() {
+        val rps = RockPaperScissors()
+        val parsedStrategies = rps.parseToRealStrategy("src/test/resources/realInputs/realinput2_1.txt")
+
+        var totalScore = 0
+        for (strategy in parsedStrategies) {
+            totalScore += rps.getScoreRegardingRealRules(strategy.input, strategy.response)
+        }
+        assertEquals(13886, totalScore)
+    }
 
 }
