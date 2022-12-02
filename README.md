@@ -1,4 +1,4 @@
-#SonarCloud analysis:
+# SonarCloud analysis:
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=adventOfCode2022&metric=bugs)](https://sonarcloud.io/summary/new_code?id=adventOfCode2022)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=adventOfCode2022&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=adventOfCode2022)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=adventOfCode2022&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=adventOfCode2022)
