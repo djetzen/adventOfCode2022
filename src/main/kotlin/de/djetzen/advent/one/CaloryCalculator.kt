@@ -2,7 +2,6 @@ package de.djetzen.advent.one
 
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.regex.Pattern
 
 class CaloryCalculator {
 

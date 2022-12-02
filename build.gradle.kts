@@ -4,9 +4,12 @@ plugins {
     kotlin("jvm") version "1.7.21"
     application
     jacoco
+    id("org.sonarqube") version "3.5.0.2730"
 }
 
-group = "org.example"
+apply(plugin = "org.sonarqube")
+
+group = "de.djetzen.advent"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -23,6 +26,14 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
+}
+
+sonar.properties {
+    property("sonar.projectKey","adventOfCode2022")
+    property("sonar.organization","djetzen")
+    property("sonar.host.url","https://sonarcloud.io")
+    property("sonar.sources", "src/main/")
+    property("sonar.tests", "src/test/")
 }
 
 application {
