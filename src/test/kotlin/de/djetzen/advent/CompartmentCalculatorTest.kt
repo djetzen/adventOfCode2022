@@ -2,10 +2,17 @@ package de.djetzen.advent
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.nio.file.Files
-import java.nio.file.Paths
 
 class CompartmentCalculatorTest {
+
+    @Test
+    fun fileCanBeParsedInSingleLines() {
+        val calc = CompartmentCalculator()
+
+        val lines = calc.parseForSingleCompartment("src/test/resources/testInputs/testinput3_1.txt")
+
+        assertEquals(6, lines.size)
+    }
 
     @Test
     fun stringIsSplittedInHalves() {
@@ -62,7 +69,7 @@ class CompartmentCalculatorTest {
     fun getSolutionForFirstDay() {
         val calc = CompartmentCalculator()
 
-        val allLines = Files.readAllLines(Paths.get("src/test/resources/realInputs/realinput3_1.txt"))
+        val allLines = calc.parseForSingleCompartment("src/test/resources/realInputs/realinput3_1.txt")
 
         var prioritySum = 0
         for (line in allLines) {
@@ -73,5 +80,40 @@ class CompartmentCalculatorTest {
         }
 
         assertEquals(7908, prioritySum)
+    }
+
+    @Test
+    fun findCommonPartsForGroup() {
+        val calc = CompartmentCalculator()
+
+        val commonLetter = calc.findCommonPartsForGroup("ab", "ad", "ae")
+
+        assertEquals("a", commonLetter)
+    }
+
+    @Test
+    fun ifNoCommonLetterIsFoundInGroupTheResultIsEmpty() {
+        val calc = CompartmentCalculator()
+
+        val commonLetter = calc.findCommonPartsForGroup("ab", "ad", "bf")
+
+        assertEquals("", commonLetter)
+    }
+
+    @Test
+    fun getSolutionForSeconddDay() {
+        val calc = CompartmentCalculator()
+
+        val allLines = calc.parseForSingleCompartment("src/test/resources/realInputs/realinput3_1.txt")
+
+        var prioritySum = 0
+        val groups = allLines.chunked(3)
+        for (group in groups) {
+            val commonLetter = calc.findCommonPartsForGroup(group.first(), group.elementAt(1), group.last())
+            val priority = calc.getPriority(commonLetter[0])
+            prioritySum += priority
+        }
+
+        assertEquals(2838, prioritySum)
     }
 }
