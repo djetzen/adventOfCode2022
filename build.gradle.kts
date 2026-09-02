@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.9.10"
     application
     jacoco
-    id("org.sonarqube") version "3.5.0.2730"
+    id("org.sonarqube") version "7.5.0.8588"
 }
 
 apply(plugin = "org.sonarqube")
